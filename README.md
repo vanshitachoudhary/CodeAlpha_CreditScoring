@@ -88,7 +88,7 @@ Full metrics for all four models (Precision, Recall, F1, ROC-AUC, Brier score) a
 </table>
 
 **Key takeaways**
-- Tree-based and linear models perform similarly on this small dataset, so the simplest strong model is preferred for interpretability.
+- Logistic Regression, Random Forest and Gradient Boosting perform similarly on this small dataset, while a single Decision Tree lags behind. The simpler, more interpretable model is therefore a strong choice here.
 - The cost curve shows the optimal decision threshold sits close to 0.5 on this split, but the cost-based approach makes the trade-off explicit and adjustable.
 - Checking account status and loan size are among the most influential features.
 
