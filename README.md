@@ -16,10 +16,6 @@
 
 </div>
 
-<!-- Add a screenshot at assets/app_screenshot.png, then remove this comment line and uncomment the next one
-<p align="center"><img src="assets/app_screenshot.png" alt="App screenshot" width="90%"/></p>
--->
-
 > **Heads up:** the free-tier demo sleeps when idle. If you see a "Wake up" button, click it and wait about 30 seconds. On a cold start the app trains the model automatically.
 
 ## 📑 Contents
@@ -42,7 +38,7 @@ Most credit-scoring demos stop at "accuracy = 78%". This one goes further:
 |---|---|
 | 🔒 **Leak-free pipeline** | Scaling and encoding live inside a scikit-learn `Pipeline`, so cross-validation never touches test data |
 | ⚖️ **Imbalance-aware** | Only 30% of applicants default, so models use class weights and are judged on Recall, F1 and ROC-AUC, not accuracy alone |
-| 📏 **Calibrated probabilities** | Brier score and a calibration curve check that "30% risk" really means about 30% defaults |
+| 📏 **Calibration check** | Brier score and a calibration curve test whether predicted probabilities can be trusted |
 | 💰 **Business-cost threshold** | A missed defaulter costs 5x a wrongly rejected customer, so the decision threshold is optimised on cost instead of fixed at 0.5 |
 | 🔍 **Explainable decisions** | Every prediction comes with a "why this result?" chart showing which factors raised or lowered the risk |
 | 🧪 **Production habits** | Shared feature module, unit tests, GitHub Actions CI, Dockerfile, auto-train on first launch |
@@ -60,12 +56,12 @@ The risk threshold in the sidebar is adjustable and defaults to the cost-optimal
 ## 🔬 Methodology
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[German Credit data] --> B[Feature engineering]
     B --> C[Pipeline: scale + encode]
-    C --> D[4 models, 5-fold CV]
+    C --> D[4 models with 5-fold CV]
     D --> E[Best model by ROC-AUC]
-    E --> F[Calibration + cost-optimal threshold]
+    E --> F[Calibration check + cost-optimal threshold]
     F --> G[Streamlit app]
 ```
 
@@ -77,16 +73,8 @@ flowchart LR
 
 ## 📊 Results
 
-The positive class is **default**.
-
-| Model | Precision | Recall | F1 | ROC-AUC | Brier |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Logistic Regression | _fill_ | _fill_ | _fill_ | _fill_ | _fill_ |
-| Decision Tree | _fill_ | _fill_ | _fill_ | _fill_ | _fill_ |
-| Random Forest | _fill_ | _fill_ | _fill_ | _fill_ | _fill_ |
-| Gradient Boosting | _fill_ | _fill_ | _fill_ | _fill_ | _fill_ |
-
-**Business impact:** total misclassification cost is _fill_ at the default 0.5 threshold versus _fill_ at the optimised threshold of _fill_.
+Full metrics for all four models (Precision, Recall, F1, ROC-AUC, Brier score) are saved by `train.py` in
+[`outputs/model_comparison.csv`](outputs/model_comparison.csv), which GitHub displays as a table. The positive class is **default**.
 
 <table>
   <tr>
@@ -98,6 +86,11 @@ The positive class is **default**.
     <td align="center"><img src="outputs/feature_importance.png" alt="Feature importance"/><br/><sub>Feature importance</sub></td>
   </tr>
 </table>
+
+**Key takeaways**
+- Tree-based and linear models perform similarly on this small dataset, so the simplest strong model is preferred for interpretability.
+- The cost curve shows the optimal decision threshold sits close to 0.5 on this split, but the cost-based approach makes the trade-off explicit and adjustable.
+- Checking account status and loan size are among the most influential features.
 
 ## 🚀 Run locally
 
@@ -144,6 +137,7 @@ CodeAlpha_CreditScoring/
 ## ⚠️ Limitations and responsible use
 
 - **Small dataset** (1,000 rows): metrics have high variance, so read them as indicative, not production-grade.
+- **Calibration:** class weighting makes the model slightly over-estimate default risk (the calibration curve sits below the diagonal). A production system would recalibrate, for example with Platt scaling or isotonic regression.
 - **Sensitive attributes:** the data includes age, personal status and foreign-worker status. A real lending system needs a fairness audit and legal review before using such features.
 - **Illustrative score:** the 300-850 score is a linear rescaling of default probability, not a regulated scorecard.
 - **Explanations** are what-if sensitivities, not Shapley values.
@@ -151,6 +145,7 @@ CodeAlpha_CreditScoring/
 ## 🛣️ Roadmap
 
 - [ ] SHAP-based explanations
+- [ ] Probability recalibration (Platt / isotonic)
 - [ ] Hyper-parameter search with Optuna
 - [ ] Fairness metrics by demographic group
 - [ ] FastAPI serving layer
