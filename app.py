@@ -1,5 +1,8 @@
 """Credit Scoring AI - Live Demo.   Run:  streamlit run app.py"""
 import json
+import os
+import subprocess
+import sys
 
 import joblib
 import numpy as np
@@ -26,14 +29,18 @@ st.markdown("""
 
 @st.cache_resource
 def load():
+    # Cloud pe model file nahi hoti (gitignore) - pehli baar khud train kar lo
+    if not os.path.exists("models/credit_model.joblib"):
+        with st.spinner("Pehli baar model train ho raha hai (~1 min)..."):
+            subprocess.run([sys.executable, "train.py"], check=True)
     with open("models/meta.json") as f:
         return joblib.load("models/credit_model.joblib"), json.load(f)
 
 
 try:
     model, meta = load()
-except FileNotFoundError:
-    st.error("Model nahi mila. Pehle `python train.py` chalao.")
+except Exception as e:
+    st.error(f"Model load/train nahi ho paya: {e}")
     st.stop()
 
 RAW = meta["raw_columns"]
