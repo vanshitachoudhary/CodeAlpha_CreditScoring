@@ -161,7 +161,7 @@ CodeAlpha_CreditScoring/
 
 **Vanshita Choudhary**
 
-[GitHub](https://github.com/vanshitachoudhary) · [LinkedIn](https://www.linkedin.com/in/your-profile) · [Live Demo](https://codealphacreditscoring-vu7mcxteskbtj5x7apph82c.streamlit.app/)
+[GitHub](https://github.com/vanshitachoudhary) · [LinkedIn](www.linkedin.com/in/vanshita-choudhary-53840435b) · [Live Demo](https://codealphacreditscoring-vu7mcxteskbtj5x7apph82c.streamlit.app/)
 
 *If you found this useful, a ⭐ on the repo is appreciated.*
 
