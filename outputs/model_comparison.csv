@@ -1,0 +1,5 @@
+,Accuracy,Precision,Recall,F1,ROC-AUC,Brier,CV ROC-AUC (5-fold)
+Logistic Regression,0.755,0.563,0.817,0.667,0.813,0.18,0.767
+Decision Tree,0.59,0.39,0.65,0.488,0.629,0.27,0.687
+Random Forest,0.735,0.545,0.7,0.613,0.806,0.179,0.799
+Gradient Boosting,0.7,0.5,0.667,0.571,0.779,0.185,0.783
